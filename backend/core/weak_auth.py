@@ -34,13 +34,22 @@ def normalize_email(email: str) -> str:
 
 def role_for_email(email: str) -> str:
     normalized = normalize_email(email)
-    if normalized.endswith("@bnbu.edu.cn"):
+    domain = normalized.rsplit("@", 1)[-1]
+
+    allowed_domains = {
+        "bnbu.edu.cn",
+        "mail.bnbu.edu.cn",
+    }
+
+    if "@" in normalized and domain in allowed_domains:
         return "teacher"
+
     raise AuthError(
         400,
         "unknown_email_domain",
         "Use a BNBU institutional email address to register.",
     )
+
 
 
 def hash_password(password: str, salt_hex: str | None = None) -> str:
